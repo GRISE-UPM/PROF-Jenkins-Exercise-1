@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+}
+
+group = 'com.PROF-Jenkins-Exercise-1'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Add any necessary dependencies here
+    testImplementation('junit:junit:4.13')
+}
+
+test {
+    finalizedBy jacocoTestReport, jacocoTestCoverageVerification // report is always generated after tests run
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = 'BUNDLE'
+            limit {
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = 1.0
+            }
+        }
+    }
+}
