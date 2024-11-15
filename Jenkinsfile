@@ -22,4 +22,15 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            script {
+                if (currentBuild.result == 'SUCCESS') {
+                    githubNotify context: 'continuous-integration/jenkins', status: 'success', description: 'Build successful', targetUrl: "${env.BUILD_URL}"
+                } else {
+                    githubNotify context: 'continuous-integration/jenkins', status: 'failure', description: 'Build failed', targetUrl: "${env.BUILD_URL}"
+                }
+            }
+        }
+    }
 }
