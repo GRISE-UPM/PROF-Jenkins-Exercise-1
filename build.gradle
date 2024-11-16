@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+}
+
+tasks.test {
+    finalizedBy jacocoTestReport
+}
+
+tasks.jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    dependsOn test // Ensure tests run before verification
+    violationRules {
+        rule {
+            element = 'BUNDLE'
+            limit {
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = 1.0 // 100% coverage required
+            }
+        }
+    }
+}
+
+tasks.check {
+    dependsOn jacocoTestCoverageVerification
+}
