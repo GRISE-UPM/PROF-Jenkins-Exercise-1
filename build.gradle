@@ -24,7 +24,7 @@ tasks.jacocoTestReport {
 }
 
 tasks.jacocoTestCoverageVerification {
-    dependsOn test // Ensure tests run before verification
+    dependsOn test 
     violationRules {
         rule {
             element = 'BUNDLE'
