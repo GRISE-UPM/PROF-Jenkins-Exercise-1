@@ -12,7 +12,6 @@ public class Square {
 			this.sideLength = sideLength;
 		}
 	}
-
 	
 	
 	public float getArea() {
