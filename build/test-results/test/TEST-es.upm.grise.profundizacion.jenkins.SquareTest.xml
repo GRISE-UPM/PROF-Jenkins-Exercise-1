@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="es.upm.grise.profundizacion.jenkins.SquareTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-11-15T23:10:22" hostname="Ubuntu" time="0.012">
+<testsuite name="es.upm.grise.profundizacion.jenkins.SquareTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-11-18T21:43:38" hostname="Ubuntu" time="0.032">
   <properties/>
-  <testcase name="test" classname="es.upm.grise.profundizacion.jenkins.SquareTest" time="0.012"/>
+  <testcase name="test" classname="es.upm.grise.profundizacion.jenkins.SquareTest" time="0.032"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
