@@ -11,6 +11,7 @@ pipeline {
             steps {
                 checkout scm
                 sh 'java -version'
+                sh 'ls -l gradle/wrapper/'
             }
         }
         
@@ -18,7 +19,7 @@ pipeline {
             steps {
                 // Asegurar permisos de ejecución
                 sh 'chmod +x gradlew'
-                sh './gradlew build'
+                sh './gradlew build --stacktrace'
             }
         }
 
