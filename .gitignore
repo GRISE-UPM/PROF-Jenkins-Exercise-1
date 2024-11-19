@@ -25,7 +25,6 @@ replay_pid*
 
 # Ignore Gradle project-specific cache directory
 .gradle
-gradle*
 .gitattributes
 app
 build
