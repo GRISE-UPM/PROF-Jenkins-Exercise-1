@@ -1,0 +1,10 @@
+[versions]
+junit = "5.11.2"
+
+[libraries]
+junitapi = { group = 'org.junit.jupiter', name = 'junit-jupiter-api', version = '5.11.2' }
+
+junitengine = { module = 'org.junit.jupiter:junit-jupiter-engine', version.ref = 'junit' }
+
+[plugins]
+

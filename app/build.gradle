@@ -1,0 +1,54 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'jacoco'
+}
+
+repositories {
+    mavenCentral()  
+}
+
+dependencies {
+    testCompileOnly 'org.junit.jupiter:junit-jupiter-api:5.11.3'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.3'
+}
+
+application {
+    mainClass = 'es.upm.grise.profundizacion.jenkins.Square'
+    applicationDefaultJvmArgs = ['-Dparameter=a_value']
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'es.upm.grise.profundizacion.jenkins.Square'
+    }
+}
+
+test {
+    useJUnitPlatform() 
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+jacoco {
+    toolVersion = "0.8.10"
+}
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            element = 'BUNDLE' // Aplica la regla al proyecto completo
+
+            limit {
+                counter = 'INSTRUCTION' // Verifica cobertura a nivel de instrucción
+                value = 'COVEREDRATIO'
+                minimum = 0.1 // Requiere 100% de cobertura
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
