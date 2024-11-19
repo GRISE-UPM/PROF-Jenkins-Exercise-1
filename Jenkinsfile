@@ -4,6 +4,7 @@ pipeline {
     environment {
         GRADLE_HOME = '/usr/local/gradle'
         PATH = "${GRADLE_HOME}/bin:${env.PATH}"
+        GITHUB_TOKEN = credentials('7da4655a-cfd6-4983-ad62-08f7fbfe6c34') // ID del nuevo token
     }
 
     stages {
