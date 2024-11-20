@@ -9,20 +9,13 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                checkout([$class: 'GitSCM',
-                          branches: [[name: '*/main']],
-                          userRemoteConfigs: [[url: 'https://github.com/EmilioAyuso/PROF-Jenkins-GRUPO-B.git',
-                                               credentialsId: '7da4655a-cfd6-4983-ad62-08f7fbfe6c34']]])
-                sh 'java -version'
-                sh 'ls -l gradle/wrapper/'
+                checkout scm
             }
         }
         
         stage('Build') {
             steps {
-                // Asegurar permisos de ejecución
-                sh 'chmod +x gradlew'
-                sh './gradlew build --stacktrace'
+                sh './gradlew build'
             }
         }
 
