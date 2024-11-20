@@ -4,13 +4,15 @@ pipeline {
     environment {
         GRADLE_HOME = '/usr/local/gradle'
         PATH = "${GRADLE_HOME}/bin:${env.PATH}"
-        GITHUB_TOKEN = credentials('7da4655a-cfd6-4983-ad62-08f7fbfe6c34') // ID del nuevo token
     }
 
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout([$class: 'GitSCM',
+                          branches: [[name: '*/main']],
+                          userRemoteConfigs: [[url: 'https://github.com/EmilioAyuso/PROF-Jenkins-GRUPO-B.git',
+                                               credentialsId: '7da4655a-cfd6-4983-ad62-08f7fbfe6c34']]])
                 sh 'java -version'
                 sh 'ls -l gradle/wrapper/'
             }
