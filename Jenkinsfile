@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        GITHUB_TOKEN = credentials('Jenkins-GrupoZ')
+        GITHUB_TOKEN = credentials('wekhook')
     }
 
     stages {
@@ -44,7 +44,7 @@ def updateGitHubStatus(String state, String description) {
     def context = "continuous-integration/jenkins"
     def commitSha = env.GIT_COMMIT
 
-    withCredentials([usernamePassword(credentialsId: 'Jenkins-GrupoZ', usernameVariable: 'carloslopllo', passwordVariable: 'GITHUB_TOKEN')]) {
+    withCredentials([string(credentialsId: 'wekhook', variable: 'GITHUB_TOKEN')]) {
         def apiUrl = "https://api.github.com/repos/carloslopllo/Jenkins-GrupoZ/statuses/${commitSha}"
         def data = """
         {
@@ -56,4 +56,3 @@ def updateGitHubStatus(String state, String description) {
         sh "curl -X POST -H 'Authorization: token ${GITHUB_TOKEN}' -d '${data}' ${apiUrl}"
     }
 }
-
