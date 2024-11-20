@@ -16,7 +16,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'chmod +x gradlew'
-                sh './gradlew build'
+                sh './gradlew build -Dorg.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL=86400'
             }
         }
 
