@@ -1,39 +1,51 @@
 pipeline {
     agent any
 
+    environment {
+        GITHUB_TOKEN = credentials('github-token') // Token configurado en Jenkins
+    }
+
+    triggers {
+        // Disparar el trabajo al recibir notificaciones del webhook
+        githubPush()
+    }
+
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
+
         stage('Build') {
             steps {
-                sh './gradlew clean build'
+                sh './gradlew build'
             }
         }
-        stage('Test and Coverage') {
+
+        stage('Test') {
             steps {
-                sh './gradlew test jacocoTestReport'
+                sh './gradlew test'
+            }
+        }
+
+        stage('Code Coverage') {
+            steps {
+                sh './gradlew jacocoTestReport'
+                sh './gradlew jacocoTestCoverageVerification'
             }
         }
     }
 
     post {
-        always {
-            junit 'build/test-results/test/*.xml'
-            jacoco execPattern: 'build/jacoco/test.exec', classPattern: 'build/classes/java/main', sourcePattern: 'src/main/java', exclusionPattern: ''
+        success {
+            // Marcar el PR como exitoso
+            updateGitHubStatus('success', 'Build successful')
         }
         failure {
-            script {
-                def message = "Build failed for ${env.BRANCH_NAME}"
-                githubNotify context: 'Jenkins CI', status: 'FAILURE', description: message, targetUrl: "${env.BUILD_URL}"
-            }
-        }
-        success {
-            script {
-                githubNotify context: 'Jenkins CI', status: 'SUCCESS', description: "All checks passed!", targetUrl: "${env.BUILD_URL}"
-            }
+            // Marcar el PR como fallido
+            updateGitHubStatus('failure', 'Build failed')
         }
     }
 }
+
