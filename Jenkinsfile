@@ -1,39 +1,62 @@
 pipeline {
     agent any
-
+    environment {
+        // Variables necesarias para Gradle
+        GRADLE_OPTS = '-Dorg.gradle.daemon=false'
+    }
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        stage('Build') {
+        stage('Set Pending Status') {
             steps {
-                sh './gradlew clean build'
+                setGitHubPullRequestStatus context: 'CI-Gradle-Build-Main', message: 'Pipeline is running...', state: 'PENDING'
             }
         }
-        stage('Test and Coverage') {
+
+       stage('Prepare Build') {
             steps {
-                sh './gradlew test jacocoTestReport'
+                sh 'chmod +x gradlew'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh './gradlew build'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh './gradlew test'
+            }
+        }
+
+        stage('Coverage') {
+            steps {
+                sh './gradlew jacocoTestReport'
+            }
+        }
+
+        stage('Verify Coverage') {
+            steps {
+                sh './gradlew check'
             }
         }
     }
 
     post {
         always {
-            junit 'build/test-results/test/*.xml'
-            jacoco execPattern: 'build/jacoco/test.exec', classPattern: 'build/classes/java/main', sourcePattern: 'src/main/java', exclusionPattern: ''
-        }
-        failure {
-            script {
-                def message = "Build failed for ${env.BRANCH_NAME}"
-                githubNotify context: 'Jenkins CI', status: 'FAILURE', description: message, targetUrl: "${env.BUILD_URL}"
-            }
+            junit '**/build/test-results/**/*.xml'
+            jacoco execPattern: '**/build/jacoco/*.exec', classPattern: '**/build/classes/java/main', sourcePattern: 'src/main/java'
         }
         success {
-            script {
-                githubNotify context: 'Jenkins CI', status: 'SUCCESS', description: "All checks passed!", targetUrl: "${env.BUILD_URL}"
-            }
+            setGitHubPullRequestStatus  context: 'CI-Gradle-Build-Main', message: 'All checks passed!', state: 'SUCCESS'
+        }
+        failure {
+            setGitHubPullRequestStatus  context: 'CI-Gradle-Build-Main', message: 'Build or tests failed.', state: 'FAILURE'
         }
     }
 }
