@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Set Pending Status') {
             steps {
-                setGitHubPullRequestStatus context: 'CI-Gradle-PipeLine', message: 'Pipeline is running...', state: 'PENDING'
+                setGitHubPullRequestStatus context: 'CI-Gradle-Build-Main', message: 'Pipeline is running...', state: 'PENDING'
             }
         }
 
@@ -53,10 +53,10 @@ pipeline {
             jacoco execPattern: '**/build/jacoco/*.exec', classPattern: '**/build/classes/java/main', sourcePattern: 'src/main/java'
         }
         success {
-            setGitHubPullRequestStatus  context: 'CI-Gradle-PipeLine', message: 'All checks passed!', state: 'SUCCESS'
+            setGitHubPullRequestStatus  context: 'CI-Gradle-Build-Main', message: 'All checks passed!', state: 'SUCCESS'
         }
         failure {
-            setGitHubPullRequestStatus  context: 'CI-Gradle-PipeLine', message: 'Build or tests failed.', state: 'FAILURE' 
+            setGitHubPullRequestStatus  context: 'CI-Gradle-Build-Main', message: 'Build or tests failed.', state: 'FAILURE' 
         }
     }
 }
