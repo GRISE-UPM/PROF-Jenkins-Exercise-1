@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+}
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+}
+
+dependencies {
+    // Use JUnit for testing.
+    testImplementation 'junit:junit:4.13.2'
+}
+
+// Apply a specific Java toolchain to ease working on different environments.
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+tasks.named('test') {
+    useJUnit()
+
+    // Use JaCoCo after tests are done
+    finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+//Configuration for JaCoCo tool
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 1.00
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
