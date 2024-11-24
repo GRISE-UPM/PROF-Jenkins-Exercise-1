@@ -32,10 +32,24 @@ pipeline {
     
     post {
         success {
-            echo 'Build successful'
+           script {
+                gitHubStatus('success')
+            }
         }
         failure {
-            echo 'Build failed'
+            script {
+                gitHubStatus('failed')
+            }
         }
     }
+}
+def gitHubStatus(String status) {
+    def prUrl = "https://api.github.com/repos/EmilioAyuso/PROF-Jenkins-GrupoB/statuses/${env.GIT_COMMIT}"
+    def data = """
+        {
+            "state": "${status}",
+            "context": "continuous-integration/jenkins"
+        }
+        """
+    sh "curl -X POST -H 'Authorization: token ${GITHUB_TOKEN}' -d '${data}' ${prUrl}"
 }
