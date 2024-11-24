@@ -20,13 +20,17 @@ pipeline {
             }
         }
         stage('JaCoCo Coverage') {
+            when {
+                // Verifica si estamos trabajando en un Pull Request
+                expression { return env.CHANGE_ID != null }
+            }
             steps {
                 sh './gradlew jacocoTestCoverageVerification'
             }
         }
     }
     
-     post {
+    post {
         success {
             echo 'Build successful'
         }
