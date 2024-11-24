@@ -7,11 +7,6 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Starting Build') {
-            steps {
-                 sh 'chmod +x gradlew'
-          }
-        }
         stage('Build') {
             steps {
                 sh './gradlew clean build'
@@ -22,11 +17,6 @@ pipeline {
                 sh './gradlew test jacocoTestReport'
             }
         }
-        stage('Checking Coverage') {
-            steps {
-                 sh './gradlew check'
-            }
-        }
     }
 
     post {
@@ -35,14 +25,12 @@ pipeline {
             jacoco execPattern: 'build/jacoco/test.exec', classPattern: 'build/classes/java/main', sourcePattern: 'src/main/java', exclusionPattern: ''
         }
         failure {
-            setGitHubPullRequestStatus  context: 'Builder', message: 'Build/tests failed.', state: 'FAILURE'
             script {
                 def message = "Build failed for ${env.BRANCH_NAME}"
                 githubNotify context: 'Jenkins CI', status: 'FAILURE', description: message, targetUrl: "${env.BUILD_URL}"
             }
         }
         success {
-            setGitHubPullRequestStatus  context: 'Builder', message: 'All checks passed!', state: 'SUCCESS'
             script {
                 githubNotify context: 'Jenkins CI', status: 'SUCCESS', description: "All checks passed!", targetUrl: "${env.BUILD_URL}"
             }
