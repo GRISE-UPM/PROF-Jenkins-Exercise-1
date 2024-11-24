@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         GITHUB_TOKEN = credentials('github-token')
+        GRADLE_OPTS = "-Dorg.jenkinsci.plugins.durabletask.BourneShellScript.HEARTBEAT_CHECK_INTERVAL=86400"
     }
 
     stages {
@@ -15,7 +16,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'chmod +x ./gradlew'
-                sh './gradlew build'
+                sh './gradlew clean build --info'
             }
         }
         stage('JaCoCo Coverage') {
