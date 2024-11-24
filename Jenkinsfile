@@ -27,10 +27,10 @@ pipeline {
     
      post {
         success {
-            githubNotify context: 'Build Status', status: 'SUCCESS', description: 'Build passed'
+            echo 'Build successful'
         }
         failure {
-            githubNotify context: 'Build Status', status: 'FAILURE', description: 'Build failed'
+            echo 'Build failed'
         }
     }
 }
