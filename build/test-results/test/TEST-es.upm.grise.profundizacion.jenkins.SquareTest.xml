@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="es.upm.grise.profundizacion.jenkins.SquareTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-11-24T12:46:19" hostname="Nekaso" time="0.029">
+  <properties/>
+  <testcase name="test" classname="es.upm.grise.profundizacion.jenkins.SquareTest" time="0.029"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
