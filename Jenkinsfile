@@ -1,51 +1,51 @@
 pipeline {
     agent any
 
-    environment {
-        GITHUB_TOKEN = credentials('github-token') // Token configurado en Jenkins
-    }
-
-    triggers {
-        // Disparar el trabajo al recibir notificaciones del webhook
-        githubPush()
-    }
-
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-
+        stage('Starting Build') {
+            steps {
+                 sh 'chmod +x gradlew'
+          }
+        }
         stage('Build') {
             steps {
-                sh './gradlew build'
+                sh './gradlew clean build'
             }
         }
-
-        stage('Test') {
+        stage('Test and Coverage') {
             steps {
-                sh './gradlew test'
+                sh './gradlew test jacocoTestReport'
             }
         }
-
-        stage('Code Coverage') {
+        stage('Checking Coverage') {
             steps {
-                sh './gradlew jacocoTestReport'
-                sh './gradlew jacocoTestCoverageVerification'
+                 sh './gradlew check'
             }
         }
     }
 
     post {
-        success {
-            // Marcar el PR como exitoso
-            updateGitHubStatus('success', 'Build successful')
+        always {
+            junit 'build/test-results/test/*.xml'
+            jacoco execPattern: 'build/jacoco/test.exec', classPattern: 'build/classes/java/main', sourcePattern: 'src/main/java', exclusionPattern: ''
         }
         failure {
-            // Marcar el PR como fallido
-            updateGitHubStatus('failure', 'Build failed')
+            setGitHubPullRequestStatus  context: 'Builder', message: 'Build/tests failed.', state: 'FAILURE'
+            script {
+                def message = "Build failed for ${env.BRANCH_NAME}"
+                githubNotify context: 'Jenkins CI', status: 'FAILURE', description: message, targetUrl: "${env.BUILD_URL}"
+            }
+        }
+        success {
+            setGitHubPullRequestStatus  context: 'Builder', message: 'All checks passed!', state: 'SUCCESS'
+            script {
+                githubNotify context: 'Jenkins CI', status: 'SUCCESS', description: "All checks passed!", targetUrl: "${env.BUILD_URL}"
+            }
         }
     }
 }
-
