@@ -1,14 +1,5 @@
 pipeline {
     agent any
-    environment {
-            GITHUB_TOKEN = credentials('github_token') // Token configurado en Jenkins
-    }
-    triggers {
-            // Disparar el trabajo al recibir notificaciones del webhook
-            githubPush()
-            githubPullRequest()
-    }
-
 
     stages {
         stage('Checkout') {
