@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+            GITHUB_TOKEN = credentials('github_token') // Token configurado en Jenkins
+        }
 
     stages {
         stage('Checkout') {
