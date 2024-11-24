@@ -38,7 +38,7 @@ pipeline {
         }
         failure {
             script {
-                gitHubStatus('failed')
+                gitHubStatus('failure')
             }
         }
     }
