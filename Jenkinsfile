@@ -12,7 +12,7 @@ pipeline {
                  sh 'chmod +x gradlew'
           }
         }
-        stage('Building') {
+        stage('Build') {
             steps {
                 sh './gradlew clean build'
             }
@@ -20,6 +20,11 @@ pipeline {
         stage('Test and Coverage') {
             steps {
                 sh './gradlew test jacocoTestReport'
+            }
+        }
+        stage('Checking Coverage') {
+            steps {
+                 sh './gradlew check'
             }
         }
     }
