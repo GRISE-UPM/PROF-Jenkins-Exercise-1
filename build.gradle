@@ -1,38 +1,47 @@
 plugins {
-    id 'java'       // Si estás trabajando con un proyecto Java
-    id 'jacoco'     // Plugin para generar los informes de cobertura
+    id 'java'
+    id 'jacoco'
 }
-repositories{
+
+repositories {
     mavenCentral()
 }
 
 dependencies {
-    // Usar JUnit BOM para gestionar versiones consistentes
     testImplementation platform('org.junit:junit-bom:5.10.3')
-
-    // Añadir los módulos específicos de JUnit 5 necesarios para las pruebas
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
 jacoco {
-    toolVersion = '0.8.12'  // Especifica la versión de JaCoCo
-    reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir') // Directorio para los informes de cobertura
+    toolVersion = '0.8.12'
+    reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
 }
 
-// Configura la tarea jacocoTestReport existente
+tasks.test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
 jacocoTestReport {
-    dependsOn test  // La tarea de reporte depende de las pruebas
+    dependsOn test
     reports {
-        xml.required = false    // Deshabilitar el reporte en formato XML
-        csv.required = false    // Deshabilitar el reporte en formato CSV
-        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')  // Directorio para el reporte HTML
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
     }
-
-    // Configurar las clases y fuentes
     sourceDirectories.setFrom(files("src/main/java"))
     classDirectories.setFrom(files("build/classes/java/main"))
     executionData.setFrom(files('build/jacoco/test.exec'))
 }
-test {
-    useJUnitPlatform()
+
+check {
+    dependsOn jacocoTestReport
+    doLast {
+        def coverage = file("build/reports/jacoco/test/html/index.html")
+        if (coverage.text.contains("Instruction coverage: 100%")) {
+            println "¡Cobertura de instrucciones al 100%!"
+        } else {
+            throw new GradleException("La cobertura de instrucciones no alcanzó el 100%")
+        }
+    }
 }
+
