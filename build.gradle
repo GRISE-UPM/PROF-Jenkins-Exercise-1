@@ -1,0 +1,52 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+}
+
+group 'com.tuorganizacion'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Usar JUnit 4 para las pruebas unitarias
+    testImplementation 'junit:junit:4.13.2'
+}
+
+test {
+    // JUnit 4 no requiere configuración adicional aquí
+}
+
+
+jacoco {
+    toolVersion = '0.8.7' // Asegurate de usar una version reciente de JaCoCo
+    //reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+jacocoTestReport {
+    dependsOn test // Asegura que las pruebas se ejecutan antes de generar el reporte
+    reports {
+        xml.required = true
+        xml.destination = file("${buildDir}/reports/jacoco/xml")
+        html.required = true
+        html.destination = file("${buildDir}/reports/jacoco/html")
+        csv.required = false
+    }
+}
+
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'INSTRUCTION'
+                minimum = 1.00 // 100% cobertura de codigo requerida
+            }
+        }
+    }
+}
+
+// Asegura que JaCoCo corra despues de las pruebas y verifique la cobertura
+test.finalizedBy(jacocoTestReport, jacocoTestCoverageVerification)
