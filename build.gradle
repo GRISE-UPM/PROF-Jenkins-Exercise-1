@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = "0.8.8"
+}
+
+// Add this block to define repositories
+repositories {
+    mavenCentral() // Maven Central repository for dependencies
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2' // Add JUnit 4
+}
+
+/*
+tasks.withType(Test) {
+    useJUnit()
+    finalizedBy jacocoTestReport
+}
+
+ */
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+test {
+    useJUnit()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 1.0 // 100% coverage
+            }
+        }
+    }
+}
+
+check.dependsOn jacocoTestCoverageVerification
