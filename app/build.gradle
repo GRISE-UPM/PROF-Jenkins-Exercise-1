@@ -6,6 +6,12 @@
  */
 
 plugins {
+    id 'java'
+    id 'jacoco'
+}
+
+
+plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
 }
@@ -40,4 +46,33 @@ application {
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+jacoco {
+    toolVersion = "0.8.8" // Última versión de JaCoCo
+}
+
+tasks.jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = 1.0 // Exige 100% de cobertura
+            }
+        }
+    }
+}
+
+tasks.check {
+    dependsOn tasks.jacocoTestCoverageVerification
+}
+
+tasks.jacocoTestReport {
+    dependsOn test // Asegura que las pruebas se ejecuten antes de generar el reporte
+    reports {
+        html.required.set(true)
+        xml.required.set(true)
+        csv.required.set(false)
+    }
 }
