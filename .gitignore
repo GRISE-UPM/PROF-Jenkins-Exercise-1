@@ -1,3 +1,7 @@
+#compilation results
+target/
+#Intellij data
+.idea/
 # Compiled class file
 *.class
 
