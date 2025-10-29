@@ -2,24 +2,24 @@ package es.upm.grise.profundizacion.jenkins;
 
 public class Square {
 
-	float sideLength;
+    float sideLength;
 
-	public Square(float sideLength) throws IncorrectSideLengthException {
-		
-		if(sideLength <= 0) {
-			throw new IncorrectSideLengthException();
-		} else {
-			this.sideLength = sideLength;
-		}
-	}
+    public Square(float sideLength) throws IncorrectSideLengthException {
 
-	
-	
-	public float getArea() {
+        if(sideLength <= 0) {
+            throw new IncorrectSideLengthException();
+        } else {
+            this.sideLength = sideLength;
+        }
+    }
 
-		return sideLength * sideLength;
-	
-	}
-	
-	
+
+
+    public float getArea() {
+
+        return sideLength * sideLength;
+
+    }
+
+
 }
