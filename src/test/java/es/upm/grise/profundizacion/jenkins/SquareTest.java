@@ -17,7 +17,7 @@ public class SquareTest {
     }
 
     @Test
-    public void testWrongArea() throws IncorrectSideLengthException {
+    public void testBadConstructor() {
         float SIDE = -10;
         assertThrows(IncorrectSideLengthException.class, () -> new Square(SIDE));
     }
