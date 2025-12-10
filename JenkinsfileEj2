@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+
+    options {
+        skipStagesAfterUnstable()
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build & Test') {
+            steps {
+                sh 'mvn -B clean verify'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "OK: Build exitoso"
+        }
+        failure {
+            echo "ERROR: Fallo en build o tests"
+        }
+    }
+}
