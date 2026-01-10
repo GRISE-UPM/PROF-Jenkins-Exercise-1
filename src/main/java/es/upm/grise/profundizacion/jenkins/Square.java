@@ -20,6 +20,6 @@ public class Square {
 		return sideLength * sideLength;
 	
 	}
-	
+	//this is a test for Jenkins Auto pull Request Build : 2
 	
 }
